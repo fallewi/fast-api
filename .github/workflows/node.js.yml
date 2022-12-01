@@ -43,15 +43,15 @@ jobs:
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME}
-            rm -Rf fast-api &&
-            mkdir fast-api &&
-            cd fast-api &&
-            git checkout master &&
-            git fetch --all &&
-            git reset --hard origin/master &&
-            git pull origin master &&
-            ls &&
-            docker-compose -f docker-compose.prod.yml up -d --build 
+          rm -Rf fast-api 
+          mkdir fast-api 
+          cd fast-api 
+          git checkout master 
+          git fetch --all 
+          git reset --hard origin/master 
+          git pull origin master 
+          ls 
+          docker-compose -f docker-compose.prod.yml up -d --build 
 
 
 
