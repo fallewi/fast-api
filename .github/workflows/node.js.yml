@@ -24,29 +24,30 @@ jobs:
       run: |
         docker login -u fallewi -p Fallewi1O.
         docker push fallewi/fast-api:$(date +%s)
-  deploy: 
+
+
+
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+  deploy:
     needs: push
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Login to Heroku Container registry
-        env:
-          HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
-        run: heroku container:login
-      - name: Build and push
-        env:
-          HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
-        run: heroku container:push -a ${{secrets.HEROKU_APP_NAME}} web
-      - name: Release
-        env:
-          HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
-        run: heroku container:release -a ${{secrets.HEROKU_APP_NAME}} web
+      name: Deploy app
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+        - uses: superfly/flyctl-actions/setup-flyctl@master
+        - run: flyctl deploy --remote-only
 
-  deploy_back4app:
-#    needs: push
-    runs-on: ubuntu-latest
-    steps:
-    -  uses: omurilo/action-back4app@v3
-       with:
-         project: 'fast-api'
-         accountKey: 'MQOmLdEpmi2Rp0VMfV1zNVgbDh5QnAFx0tc1t0Fw'
+
+
+
+
+
+
+
+
+
+
+
