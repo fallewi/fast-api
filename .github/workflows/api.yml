@@ -33,7 +33,7 @@ jobs:
           username: ${{ secrets.USER_NAME  }}
           key: ${{ secrets.AWS_PRIVATE_KEY  }}
           envs: ${GITHUB_SHA}
-          scripts: |
+          script: |
             docker rm -f fast-api 
             docker run -d -p 9000:80 --name fastapi fallewi/fast-api:${GITHUB_SHA} 
             docker ps 
@@ -41,6 +41,3 @@ jobs:
             curl localhost:9000
             ls 
             docker images
-        run: |
-          echo "end for pipeline"
-          echo "all done"
