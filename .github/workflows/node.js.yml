@@ -18,7 +18,7 @@ jobs:
         docker build -t fallewi/fast-api:${GITHUB_SHA} .
         docker images
         docker run -d -p 80:8000 --name fastapi fallewi/fast-api:${GITHUB_SHA}
-        curl localhost
+        # curl localhost
         docker login -u ${{ secrets.DOCKERHUB_USER  }} -p ${{ secrets.DOCKERHUB_PASSWD  }}
         docker push fallewi/fast-api:${GITHUB_SHA}
   deploy:
