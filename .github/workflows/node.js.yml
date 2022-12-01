@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       with:
-      name: fast-api
+        name: fast-api
     - name: Docker login & push
       run: |
         docker load < fast-api.tar
