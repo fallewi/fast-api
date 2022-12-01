@@ -26,19 +26,20 @@ jobs:
     needs: build-push-container
     runs-on: ubuntu-latest
     steps:
+      - use: appleboys/ssh-action@master  
       - name: Deploy in EC2
+        with:
+	  host: ${{ secrets.HOSTNAME  }}
+	  username: ${{ secrets.USER_NAME  }}
+	  key: ${{ secrets.AWS_PRIVATE_KEY  }}
         env:
-            PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
-            HOSTNAME : ${{ secrets.HOSTNAME  }}
-            USER_NAME : ${{ secrets.USER_NAME  }}
+          envs: ${GITHUB_SHA}
             
-        run: |
-          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} &&
-          docker rm -f fast-api &&
-          docker run -d -p 80:80 --name fastapi fallewi/fast-api:${GITHUB_SHA} &&
-          docker ps &&
-          sleep 10 &&
-          curl localhost &&
-          ls &&
+        script: |
+          docker rm -f fast-api 
+          docker run -d -p 9000:80 --name fastapi fallewi/fast-api:${GITHUB_SHA} 
+          docker ps 
+          sleep 10 
+          curl localhost:9000
+          ls 
           docker images
