@@ -38,7 +38,7 @@ jobs:
           docker rm -f fast-api &&
           docker run -d -p 80:80 --name fastapi fallewi/fast-api:${GITHUB_SHA} &&
           docker ps &&
-	  sleep 10 &&
+          sleep 10 &&
           curl localhost &&
           ls &&
           docker images
