@@ -33,7 +33,9 @@ jobs:
             
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME}
-          docker rm -f fast-api
-          docker run -d -p 9000:8000 --name fastapi docker.io/fallewi/fast-api:${GITHUB_SHA}
-          docker ps
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} &&
+          docker rm -f fast-api &&
+          docker run -d -p 9000:8000 --name fastapi fallewi/fast-api:${GITHUB_SHA} &&
+          docker ps &&
+	  ls &&
+	  docker images
