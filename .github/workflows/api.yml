@@ -33,7 +33,7 @@ jobs:
           username: ${{ secrets.USER_NAME  }}
           key: ${{ secrets.AWS_PRIVATE_KEY  }}
           envs: ${GITHUB_SHA}
-          script: |
+          run: |
             docker rm -f fast-api 
             docker run -d -p 9000:80 --name fastapi fallewi/fast-api:${GITHUB_SHA} 
             docker ps 
