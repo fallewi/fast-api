@@ -1,13 +1,11 @@
-import sys
+from typing import Union
 
 from fastapi import FastAPI
-
-version = f"{sys.version_info.major}.{sys.version_info.minor}"
 
 app = FastAPI()
 
 
 @app.get("/")
-async def read_root():
-    message = f"Hello Fall! From FastAPI running on Uvicorn with Gunicorn. Using Python {version}"
-        return {"message": message}
+def read_root():
+    return {"Hello": "World"}
+
