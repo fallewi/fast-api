@@ -24,6 +24,7 @@ jobs:
     steps:
     - name: Docker login & push
       run: |
+        docker images
         docker login -u ${{ secrets.REGISTRY_USER  }} -p ${{ secrets.REGISTRY_PASSWD  }}
         docker push docker.io/fallewi/fast-api:$(date +%s)
 
