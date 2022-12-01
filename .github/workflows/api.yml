@@ -41,3 +41,6 @@ jobs:
             curl localhost:9000
             ls 
             docker images
+        run: |
+          echo "end for pipeline"
+          echo "all done"
