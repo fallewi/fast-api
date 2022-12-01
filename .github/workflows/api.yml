@@ -22,22 +22,24 @@ jobs:
         curl localhost
         docker login -u ${{ secrets.REGISTRY_USER  }} -p ${{ secrets.REGISTRY_PASSWD  }}
         docker push fallewi/fast-api:${GITHUB_SHA}
+        
   deploy:
     needs: build-push-container
+    name: deploy
     runs-on: ubuntu-latest
     steps:
-      - uses: appleboys/ssh-action@master 
-      - name: Deploy in EC2
-        with:
-          host: ${{ secrets.HOSTNAME  }}
-          username: ${{ secrets.USER_NAME  }}
-          key: ${{ secrets.AWS_PRIVATE_KEY  }}
-          envs: ${GITHUB_SHA}
-          script: |
-            docker rm -f fast-api 
-            docker run -d -p 9000:80 --name fastapi fallewi/fast-api:${GITHUB_SHA} 
-            docker ps 
-            sleep 10 
-            curl localhost:9000
-            ls 
-            docker images
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOSTNAME  }}
+        username: ${{ secrets.USER_NAME  }}
+        key: ${{ secrets.AWS_PRIVATE_KEY  }}
+        port: 22
+        script: |
+          docker rm -f fast-api 
+          docker run -d -p 9000:80 --name fastapi fallewi/fast-api:${GITHUB_SHA} 
+          docker ps 
+          sleep 10 
+          curl localhost:9000
+          ls 
+          docker images
