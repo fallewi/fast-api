@@ -43,7 +43,7 @@ jobs:
         run: heroku container:release -a ${{secrets.HEROKU_APP_NAME}} web
 
   deploy_back4app:
-    needs: push
+#    needs: push
     runs-on: ubuntu-lastest
     steps:
     -  uses: omurilo/action-back4app@v3
