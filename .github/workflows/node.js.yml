@@ -9,7 +9,7 @@ on:
     branches: [ master ]
 
 
-  build:
+  build-push-container:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -22,7 +22,7 @@ on:
         docker login -u ${{ secrets.DOCKERHUB_USER  }} -p ${{ secrets.DOCKERHUB_PASSWD  }}
         docker push fallewi/fast-api:$(date +%s)
   deploy:
-    needs: push
+    needs: build-push-container
     runs-on: ubuntu-latest
     steps:
       - name: Deploy in EC2
@@ -45,13 +45,3 @@ on:
           # docker-compose -f docker-compose.prod.yml up -d --build 
           docker run -p 9000:8000 --name fastapi docker.io/fallewi/fast-api:$(date +%s)
           docker ps
-          
-
-
-
-
-
-
-
-
-
