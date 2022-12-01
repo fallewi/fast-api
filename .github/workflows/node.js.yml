@@ -24,10 +24,11 @@ jobs:
         docker save fallewi/fast-api:$(date +%s) > fast-api.tar
   push:
     needs: build
-    runs-on: ubuntu-latest
-    steps:
+    - uses: actions/checkout@v3
       with:
         name: fast-api
+    runs-on: ubuntu-latest
+    steps:
     - name: Docker login & push
       run: |
         docker load < fast-api.tar
