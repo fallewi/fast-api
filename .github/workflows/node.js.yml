@@ -52,7 +52,8 @@ jobs:
           git pull origin master 
           ls 
         # docker-compose -f docker-compose.prod.yml up -d --build 
-	  docker run -p 9000:8000 --name fastapi fallewi/fast-api:$(date +%s)
+          docker run -p 9000:8000 --name fastapi fallewi/fast-api:$(date +%s)
+          docker ps
           
 
 
