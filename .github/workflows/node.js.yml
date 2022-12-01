@@ -28,19 +28,29 @@ jobs:
         docker push fallewi/fast-api:$(date +%s)
 
 
-
-
   deploy:
-    name: Deploy proxy
-    #needs: push
+    needs: build
     runs-on: ubuntu-latest
+    
     steps:
-      # This step checks out a copy of your repository.
-      - uses: actions/checkout@v2
-      - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: flyctl deploy --remote-only
+      - uses: actions/checkout@v2 
+      - name: Deploy in EC2
         env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+            PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
+            HOSTNAME : ${{ secrets.HOSTNAME  }}
+            USER_NAME : ${{ secrets.USER_NAME  }}
+            
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+          
+            #Now we have got the access of EC2 and we will start the deploy .
+            cd /home/ubuntu/CounterApp &&
+            git checkout master &&
+            git fetch --all &&
+            git reset --hard origin/master &&
+            git pull origin master &&
+            docker-compose -f docker-compose.prod.yml up -d --build 
 
 
 
