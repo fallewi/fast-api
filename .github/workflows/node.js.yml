@@ -14,16 +14,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+      with:
+        name: fast-api
+        path: fast-api.tar
     - name: Build the Docker image
       run: | 
-        docker build -t docker.io/fallewi/fast-api:$(date +%s) .
+        docker build -t fallewi/fast-api:$(date +%s) .
         docker images
+        docker save fallewi/fast-api:$(date +%s) > fast-api.tar
   push:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      with:
+        name: fast-api
     - name: Docker login & push
       run: |
+        docker load < fast-api.tar
         docker images
         docker login -u ${{ secrets.REGISTRY_USER  }} -p ${{ secrets.REGISTRY_PASSWD  }}
         docker push docker.io/fallewi/fast-api:$(date +%s)
