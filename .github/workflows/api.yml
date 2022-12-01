@@ -16,12 +16,14 @@ jobs:
     - name: Build the Docker image
       run: | 
         docker build -t fallewi/fast-api:${GITHUB_SHA} .
+        docker tag  fallewi/fast-api:${GITHUB_SHA} fallewi/fast-api:latest
         docker images
         docker run -d -p 80:80 --name fastapi fallewi/fast-api:${GITHUB_SHA}
         sleep 10
         curl localhost
         docker login -u ${{ secrets.REGISTRY_USER  }} -p ${{ secrets.REGISTRY_PASSWD  }}
         docker push fallewi/fast-api:${GITHUB_SHA}
+        docker push fallewi/fast-api:latest
         
   deploy:
     needs: build-push-container
@@ -38,7 +40,7 @@ jobs:
         script: |
           docker rm -f fastapi 
           sleep 10 
-          docker run -d -p 9000:80 --name fastapi fallewi/fast-api:${GITHUB_SHA} 
+          docker run -d -p 9000:80 --name fastapi fallewi/fast-api:latest
           echo "container lancé!!!"
           docker ps 
           sleep 10 
