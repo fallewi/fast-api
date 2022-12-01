@@ -39,6 +39,7 @@ jobs:
         port: 22
         script: |
           docker rm -f fastapi 
+          docker rmi fallewi/fast-api:latest
           sleep 10 
           docker run -d -p 9000:80 --name fastapi fallewi/fast-api:latest
           echo "container lancé!!!"
