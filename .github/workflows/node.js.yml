@@ -24,12 +24,12 @@ jobs:
     steps:
     - name: Docker login & push
       run: |
-        docker login -u fallewi -p Fallewi1O.
+        docker login -u ${{ secrets.REGISTRY_USER  }} -p ${{ secrets.REGISTRY_PASSWD  }}
         docker push fallewi/fast-api:$(date +%s)
 
 
   deploy:
-    needs: build
+    needs: push
     runs-on: ubuntu-latest
     
     steps:
