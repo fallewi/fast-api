@@ -52,7 +52,7 @@ jobs:
           git pull origin master 
           ls 
           docker-compose -f docker-compose.prod.yml up -d --build 
-
+          docker ps
 
 
 
