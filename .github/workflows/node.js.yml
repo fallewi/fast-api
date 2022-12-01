@@ -17,6 +17,7 @@ jobs:
         docker build . --file Dockerfile --tag fallewi/fast-api:$(date +%s)
         docker images
   push:
+    needs: build
     runs-on: ubuntu-latest
     steps:
     - name: Docker login & push
@@ -24,7 +25,7 @@ jobs:
         docker login -u fallewi -p Fallewi1O.
         docker push fallewi/fast-api:$(date +%s)
   deploy: 
-    needs: build
+    needs: push
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -40,3 +41,12 @@ jobs:
         env:
           HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
         run: heroku container:release -a ${{secrets.HEROKU_APP_NAME}} web
+
+  deploy_back4app:
+    needs: push
+    runs-on: ubuntu-lastest
+    steps:
+    -  uses: omurilo/action-back4app@v3
+       with:
+         project: 'fast-api'
+         accountKey: 'MQOmLdEpmi2Rp0VMfV1zNVgbDh5QnAFx0tc1t0Fw'
