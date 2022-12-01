@@ -44,7 +44,7 @@ jobs:
 
   deploy_back4app:
 #    needs: push
-    runs-on: ubuntu-lastest
+    runs-on: ubuntu-latest
     steps:
     -  uses: omurilo/action-back4app@v3
        with:
