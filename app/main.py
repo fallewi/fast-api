@@ -7,5 +7,5 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"Hello": "Bienvenue sur la Masterclass Devops chez  Datascientest"}
+    return {"Hello": "Fin de la Masterclass Devops chez  Datascientest"}
 
