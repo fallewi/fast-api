@@ -25,18 +25,6 @@ jobs:
         docker push fallewi/fast-api:${GITHUB_SHA}
         docker push fallewi/fast-api:latest
 
-  copy:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Copy single file to remote
-        uses: garygrossgarten/github-action-scp@release
-	with:
-	  local: docker-compose.yml
-	  remote: /home/ubuntu/docker-compose.yml
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.SSH_USER }}
-          privateKey : ${{ secrets.AWS_PRIVATE_KEY  }}
-
   deploy:
     needs: build-push-container
     name: deploy
