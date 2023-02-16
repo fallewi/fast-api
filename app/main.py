@@ -1,4 +1,4 @@
-from typing import Union
+ofrom typing import Union
 
 from fastapi import FastAPI
 
@@ -7,5 +7,5 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"Hello": "début de la démo devops !!"}
+    return {"Hello": "fin  de la démo devops !!"}
 
