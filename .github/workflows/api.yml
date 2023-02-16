@@ -38,12 +38,12 @@ jobs:
         key: ${{ secrets.AWS_PRIVATE_KEY  }}
         port: 22
         script: |
-          docker rm -f fastapi 
-          docker rmi fallewi/fast-api:latest
+          sudo docker rm -f fastapi 
+          sudo docker rmi fallewi/fast-api:latest
           sleep 10 
-          docker run -d -p 9000:80 --name fastapi fallewi/fast-api:latest
-          docker ps 
+          sudo docker run -d -p 9000:80 --name fastapi fallewi/fast-api:latest
+          sudo docker ps 
           sleep 10 
           curl localhost:9000
           ls 
-          docker images
+          sudo docker images
