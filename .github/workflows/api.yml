@@ -21,6 +21,7 @@ jobs:
         python3 test.py
       
   build-push-container:
+    needs: test
     runs-on: ubuntu-latest
     steps:
     - name: Build the Docker image
