@@ -9,10 +9,20 @@ on:
     branches: [ master ]
 
 jobs:
-  build-push-container:
+  test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: | 
+        pip3 install -r requirements.txt
+        cd app
+        CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+        python3 test.py
+      
+  build-push-container:
+    runs-on: ubuntu-latest
+    steps:
     - name: Build the Docker image
       run: | 
         docker build -t fallewi/fast-api:${GITHUB_SHA} .
