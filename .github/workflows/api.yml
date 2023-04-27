@@ -26,6 +26,7 @@ jobs:
     steps:
     - name: Build the Docker image
       run: | 
+        cd ..
         docker build -t fallewi/fast-api:${GITHUB_SHA} .
         docker tag  fallewi/fast-api:${GITHUB_SHA} fallewi/fast-api:latest
         docker images
