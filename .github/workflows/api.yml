@@ -31,7 +31,7 @@ jobs:
     - name: Build the Docker image
       run: | 
         docker build -t $dockerhub_id/$dockerhub_repository:${GITHUB_SHA} . 
-        docker tag  $dockerhub_id/$dockerhub_repository:${GITHUB_SHA $dockerhub_id/$dockerhub_repository:$dockerhub_latest
+        docker tag  $dockerhub_id/$dockerhub_repository:$GITHUB_SHA $dockerhub_id/$dockerhub_repository:$dockerhub_latest
         docker images
         docker run -d -p 80:80 --name $dockerhub_repository $dockerhub_id/$dockerhub_repository:${GITHUB_SHA}
         sleep 10
