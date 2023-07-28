@@ -8,10 +8,10 @@ on:
   pull_request:
     branches: [ master ]
 env:
-  DOCKERHUB-ID: fallewi
-  DOCKERHUB-REPOSITORY: fastapi
-  DOCKERTAG-COMMITHASH: ${GITHUB_SHA}
-  DOCKERTAG-LATEST: latest
+  dockerhub-id: fallewi
+  dockerhub-repository: fastapi
+  dockerhub-commithash: ${GITHUB_SHA}
+  dockerhub-latest: latest
 
 jobs:
   test:
@@ -31,14 +31,14 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: | 
-        docker build -t $DOCKERHUB-ID/$DOCKERHUB-REPOSITORY:$DOCKERTAG-COMMITHASH . 
-        docker tag  $DOCKERHUB-ID/$DOCKERHUB-REPOSITORY:${GITHUB_SHA $DOCKERHUB-ID/$DOCKERHUB-REPOSITORY:$DOCKERTAG-LATEST
+        docker build -t $dockerhub-id/$dockerhub-repository:$dockerhub-commithash . 
+        docker tag  $dockerhub-id/$dockerhub-repository:${GITHUB_SHA $dockerhub-id/$dockerhub-repository:$dockerhub-latest
         docker images
-        docker run -d -p 80:80 --name $DOCKERHUB-REPOSITORY $DOCKERHUB-ID/$DOCKERHUB-REPOSITORY:$DOCKERTAG-COMMITHASH
+        docker run -d -p 80:80 --name $dockerhub-repository $dockerhub-id/$dockerhub-repository:$dockerhub-commithash
         sleep 10
         docker login -u ${{ secrets.REGISTRY_USER  }} -p ${{ secrets.REGISTRY_PASSWD  }}
-        docker push $DOCKERHUB-ID/$DOCKERHUB-REPOSITORY:$DOCKERTAG-COMMITHASH
-        docker push $DOCKERHUB-ID/$DOCKERHUB-REPOSITORY:$DOCKERTAG-LATEST
+        docker push $dockerhub-id/$dockerhub-repository:$dockerhub-commithash
+        docker push $dockerhub-id/$dockerhub-repository:$dockerhub-latest
 
   deploy:
     needs: build-push-container
@@ -53,10 +53,10 @@ jobs:
         key: ${{ secrets.AWS_PRIVATE_KEY  }}
         port: 22
         script: |
-          sudo docker rm -f $DOCKERHUB-REPOSITORY 
-          sudo docker rmi $DOCKERHUB-ID/$DOCKERHUB-REPOSITORY:$DOCKERTAG-LATEST
+          sudo docker rm -f $dockerhub-repository 
+          sudo docker rmi $dockerhub-id/$dockerhub-repository:$dockerhub-latest
           sleep 10 
-          sudo docker run -d -p 9000:80 --name $DOCKERHUB-REPOSITORY $DOCKERHUB-ID/$DOCKERHUB-REPOSITORY:$DOCKERTAG-LATEST
+          sudo docker run -d -p 9000:80 --name $dockerhub-repository $dockerhub-id/$dockerhub-repository:$dockerhub-latest
           sudo docker ps 
           sleep 10 
           curl localhost:9000
