@@ -1,15 +1,13 @@
-# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
 name: Fast-API CI
 on:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+	
 env:
-  dockerhub_id: fallewi
-  dockerhub_repository: fastapi
+  dockerhub_id: demo.goharbor.io/demo-fleet
+  dockerhub_repository:fastapi
   dockerhub_latest: latest
 
 jobs:
@@ -30,34 +28,42 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: | 
-        docker build -t $dockerhub_id/$dockerhub_repository:${GITHUB_SHA} . 
-        docker tag  $dockerhub_id/$dockerhub_repository:$GITHUB_SHA $dockerhub_id/$dockerhub_repository:$dockerhub_latest
+        docker build -t $dockerhub_id/$dockerhub_repository:${GITHUB_SHA} .
+        docker tag  $dockerhub_id/$dockerhub_repository:${GITHUB_SHA} $dockerhub_id/$dockerhub_repository:$dockerhub_latest
         docker images
-        docker run -d -p 80:80 --name $dockerhub_repository $dockerhub_id/$dockerhub_repository:${GITHUB_SHA}
+        docker run -d -p 80:80 --name $dockerhub_id $dockerhub_id/$dockerhub_repository:${GITHUB_SHA}
         sleep 10
+        curl localhost 
         docker login -u ${{ secrets.REGISTRY_USER  }} -p ${{ secrets.REGISTRY_PASSWD  }}
         docker push $dockerhub_id/$dockerhub_repository:${GITHUB_SHA}
         docker push $dockerhub_id/$dockerhub_repository:$dockerhub_latest
-
-  deploy:
+  update-push:
     needs: build-push-container
-    name: deploy
+    name: Clone update and Push
     runs-on: ubuntu-latest
     steps:
-    - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@master
+    - uses: actions/checkout@v3
+    - name: Setup SSH
+      uses: MrSquaare/ssh-setup-action@v1
       with:
-        host: ${{ secrets.HOSTNAME  }}
-        username: ${{ secrets.USER_NAME  }}
-        key: ${{ secrets.AWS_PRIVATE_KEY  }}
-        port: 22
-        script: |
-          sudo docker rm -f $dockerhub_repository 
-          sudo docker rmi $dockerhub_id/$dockerhub_repository:$dockerhub_latest
-          sleep 10 
-          sudo docker run -d -p 9000:80 --name $dockerhub_repository $dockerhub_id/$dockerhub_repository:$dockerhub_latest
-          sudo docker ps 
-          sleep 10 
-          curl localhost:9000
-          ls 
-          sudo docker images
+          host: github.com
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          
+    - name: Clone repository
+      run: |
+        rm -Rf *
+        git clone git@github.com:fallewi/gitops-fleet-helm.git
+        ls
+        cd gitops-fleet-helm/
+        cat values.yaml
+        sed -i "s+tag.*+tag: ${GITHUB_SHA}+g" values.yaml
+        cat values.yaml
+    - name: Commit and push changes
+      run: |
+        ls
+        cd gitops-fleet-helm
+        git config --global user.name "Fall lewis"
+        git config --global user.email "fall-lewis.y@datascientest.com"
+        git add -A
+        git commit -m "mis à jour de l'image avec le tag ${GITHUB_SHA}"
+        git push origin master
