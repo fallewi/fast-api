@@ -52,10 +52,10 @@ jobs:
         key: ${{ secrets.AWS_PRIVATE_KEY  }}
         port: 22
         script: |
-          sudo docker rm -f $dockerhub_repository 
-          sudo docker rmi $dockerhub_id/$dockerhub_repository:$dockerhub_latest
+          sudo docker rm -f fastapi
+          sudo docker rmi fallewi/fastapi:latest
           sleep 10 
-          sudo docker run -d -p 9000:80 --name $dockerhub_repository $dockerhub_id/$dockerhub_repository:$dockerhub_latest
+          sudo docker run -d -p 9000:80 --name fallewi/fastapi:latest
           sudo docker ps 
           sleep 10 
           curl localhost:9000
