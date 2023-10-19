@@ -9,3 +9,5 @@ services:
       dockerfile: Dockerfile.prod
     ports:
       - '8000:8000'
+
+
