@@ -35,6 +35,8 @@ jobs:
         docker images
         docker run -d -p 80:80 --name $dockerhub_repository $dockerhub_id/$dockerhub_repository:${GITHUB_SHA}
         sleep 10
+        curl http://localhost
+        sleep 5
         docker login -u ${{ secrets.REGISTRY_USER  }} -p ${{ secrets.REGISTRY_PASSWD  }}
         docker push $dockerhub_id/$dockerhub_repository:${GITHUB_SHA}
         docker push $dockerhub_id/$dockerhub_repository:$dockerhub_latest
