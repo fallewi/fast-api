@@ -4,6 +4,6 @@ app = FastAPI()
 
 @app.get("/")
 async def read_main():
-    return {"msg": "FIN MC DEVOPS"}
+    return {"msg": " MC DEVOPS va echouer"}
 
 
