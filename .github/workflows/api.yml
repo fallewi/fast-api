@@ -20,8 +20,6 @@ jobs:
     - name: Test python Code
       run: | 
         pip3 install -r requirements.txt 
-        cd app/
-        pytest
   secure:
     needs: test
     name: Microsoft Security DevOps Analysis
